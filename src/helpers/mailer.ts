@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 import User from "@/models/userModels";
 import bcrypt from "bcryptjs";
 
-export const sendEmail = async ({ email, emailType, userId }) => {
+export const sendEmail = async ({ email, emailType, userId }:any) => {
   try {
     // Create hashed token
     const hashedToken = await bcrypt.hash(userId.toString(), 10);
@@ -10,13 +10,17 @@ export const sendEmail = async ({ email, emailType, userId }) => {
     // Save token in DB depending on type
     if (emailType === "VERIFY") {
       await User.findByIdAndUpdate(userId, {
+        $set: {
         verifyToken: hashedToken,
         verifyTokenExpiry: Date.now() + 3600000, // 1 hr
+        }
       });
     } else if (emailType === "RESET") {
       await User.findByIdAndUpdate(userId, {
-        forgotPasswordToken: hashedToken,
-        forgotPasswordTokenExpiry: Date.now() + 3600000,
+        $set:{
+          forgotPasswordToken: hashedToken,
+          forgotPasswordTokenExpiry: Date.now() + 3600000,
+        }
       });
     }
 
