@@ -3,7 +3,7 @@ import User from '@/models/userModels'
 import {NextRequest,NextResponse} from 'next/server'
 connect()
 // token must be removed to logout
-export async function POST(request:NextRequest) {
+export async function GET(request:NextRequest) {
     try {
         const response = NextResponse.json({
             message: "Logout Successfully",
